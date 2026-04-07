@@ -1,7 +1,7 @@
 // MONTAGE — API Integration Layer
 // Replace placeholder keys as needed.
 
-const TMDB_API_KEY = 'YOUR_TMDB_API_KEY_HERE'; // <-- Replace with your key
+const TMDB_API_KEY = '6c2c758841a46971ae09531415f2f16c'; // <-- Replace with your key
 const TMDB_BASE = 'https://api.themoviedb.org/3';
 const TMDB_IMG = 'https://image.tmdb.org/t/p';
 
