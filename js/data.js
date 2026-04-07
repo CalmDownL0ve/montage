@@ -84,7 +84,7 @@ export const MOCK_REVIEWS = [
     accent: '#3f8a50',
     blocks: [
       { type: 'text', content: 'The architecture IS the movie. Every staircase, every window, every flood drain — class warfare built into the set design.' },
-      { type: 'tweet', handle: '@bongjoonho_fan', content: 'just realized the Parks never once look UP in the entire film. the Kims never stop looking up. cinema.' },
+      { type: 'tweet', handle: '@bongjoonho_fan', content: 'just realized the Parks never once look UP in the entire film. the Kims never stop looking up. cinema.', tweetUrl: 'https://x.com/letteraboratory/status/1849848502710018163' },
       { type: 'image', url: null, filmColorVariant: 0 },
     ],
   },
@@ -124,7 +124,7 @@ export const MOCK_REVIEWS = [
     blocks: [
       { type: 'text', content: 'The diner scene. That\'s it. That\'s the review.' },
       { type: 'sketch', label: 'narrative loop', variant: 2 },
-      { type: 'tweet', handle: '@lynchposting', content: 'mulholland drive is not a puzzle to solve. it\'s a feeling to surrender to.' },
+      { type: 'tweet', handle: '@lynchposting', content: 'mulholland drive is not a puzzle to solve. it\'s a feeling to surrender to.', tweetUrl: 'https://x.com/Lynch_Posting/status/1909735605992374727' },
     ],
   },
   {

@@ -123,3 +123,10 @@ img { display: block; max-width: 100%; -webkit-user-drag: none; } ::-webkit-scro
 .delay-1 { animation-delay: 0.05s; } .delay-2 { animation-delay: 0.10s; } .delay-3 { animation-delay: 0.15s; }
 .delay-4 { animation-delay: 0.20s; } .delay-5 { animation-delay: 0.25s; } .delay-6 { animation-delay: 0.30s; }
 .delay-7 { animation-delay: 0.35s; } .delay-8 { animation-delay: 0.40s; }
+
+/* ── Tweet Embeds ── */
+.tweet-embed-container { border-radius: 8px; overflow: hidden; }
+.tweet-embed-container .twitter-tweet { margin: 0 !important; }
+.tweet-embed-container iframe { border-radius: 8px !important; }
+.tweet-embed-container blockquote { margin: 0; padding: 12px 14px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); font: 400 12px/1.5 var(--font-sans); color: #b0a89a; }
+.tweet-embed-container blockquote a { color: var(--gold); opacity: 0.7; }
