@@ -169,3 +169,90 @@ function renderReviewDetail(review) {
     <div class="detail-blocks">${review.blocks.map((b,i)=>`<div class="animate-slide delay-${i+1}">${renderBlock(b,review.filmId,false)}</div>`).join('')}</div>
     <div class="detail-actions"><span>♡ Like</span><span>↗ Share</span><span>⊕ Save</span></div>
   </div>`;
+}
+
+function renderFilmDetail(film) {
+  const filmReviews = state.reviews.filter(r => r.filmId === film.id);
+  const reviews = filmReviews.length ? filmReviews : state.reviews.slice(0, 4);
+  return `<div class="view animate-fade">
+    <div style="padding:0 20px"><button class="back-btn" data-action="back">← back</button></div>
+    <div class="film-hero"><div class="film-hero__bg">${film.backdrop?`<img src="${film.backdrop}" alt="">`:''}<div class="film-hero__gradient" style="background:linear-gradient(180deg,transparent 30%,${film.colors[0]}cc 70%,#1a1612)"></div></div>
+    <div class="film-hero__content">${posterHTML(film.id,'lg')}<div class="film-hero__info">
+      <h1 class="film-hero__title">${film.title}</h1><p class="film-hero__meta">${film.year} · ${film.director}</p>${stars(film.rating/2,'stars--lg')}
+      ${film.imdbId?`<a href="https://www.imdb.com/title/${film.imdbId}" target="_blank" style="font:400 10px var(--font-sans);color:var(--gold);margin-top:8px;display:inline-block;opacity:0.6">View on IMDb ↗</a>`:''}</div></div></div>
+    <div style="padding:24px 20px 0"><h3 class="section-label" style="margin-bottom:16px">Montages</h3><div class="masonry">${reviews.map((r,i)=>renderCard(r,i)).join('')}</div></div></div>`;
+}
+
+function renderCompose() {
+  const opts = [{key:'photo',icon:'◻︎',label:'Photo'},{key:'tweet',icon:'𝕏',label:'Post'},{key:'sketch',icon:'✎',label:'Drawing'},{key:'quote',icon:'❝',label:'Quote'},{key:'song',icon:'♫',label:'Song'},{key:'palette',icon:'◉',label:'Palette'}];
+  return `<div class="compose animate-fade">
+    <button class="back-btn" data-action="back">← back</button>
+    <h2 class="compose__title">New Montage</h2>
+    <div class="compose__field"><div class="compose__field-poster">+</div><div><span class="compose__field-label">Film</span><div class="compose__field-placeholder">Search…</div></div></div>
+    <div style="margin-bottom:24px"><span class="compose__field-label">Rating</span><div class="compose__rating-stars">★★★★★</div></div>
+    <span class="compose__field-label" style="display:block;margin-bottom:12px">Add to your montage</span>
+    <div class="media-grid">${opts.map(m=>`<div class="media-option ${state.composerMedia.includes(m.key)?'media-option--active':''}" data-action="toggle-media" data-key="${m.key}"><span class="media-option__icon">${m.icon}</span><span class="media-option__label">${m.label}</span></div>`).join('')}</div>
+    ${state.composerMedia.length?`<span class="compose__field-label" style="display:block;margin-bottom:12px">Your blocks</span>${state.composerMedia.map(k=>{const m=opts.find(o=>o.key===k);return`<div class="compose__block-slot"><span class="compose__block-slot__icon">${m.icon}</span><span class="compose__block-slot__label">Tap to add ${m.label.toLowerCase()}</span></div>`;}).join('')}<div style="height:16px"></div>`:''}
+    <div class="compose__textarea"><span class="compose__field-label">Your thoughts</span><div class="compose__field-placeholder" style="margin-top:10px">Write…</div></div>
+    <button class="btn-publish">Publish</button></div>`;
+}
+
+function render() {
+  const content = $('#content');
+  switch (state.view) {
+    case 'feed': content.innerHTML = renderFeed(); break;
+    case 'review': content.innerHTML = renderReviewDetail(state.data); break;
+    case 'film': content.innerHTML = renderFilmDetail(state.data); break;
+    case 'compose': content.innerHTML = renderCompose(); break;
+  }
+  updateNav(); window.scrollTo(0, 0);
+}
+
+function navigate(view, data = null) {
+  state.view = view; state.data = data;
+  if (view === 'feed') state.tab = 'feed';
+  if (view === 'compose') state.tab = 'compose';
+  render();
+}
+
+function updateNav() {
+  $$('.nav-btn').forEach(btn => btn.classList.toggle('nav-btn--active', btn.dataset.tab === state.tab));
+}
+
+function toggleSearch(open) {
+  const overlay = $('.search-overlay');
+  if (overlay) { overlay.classList.toggle('search-overlay--open', open);
+    if (open) { const input = $('.search-input'); if (input) setTimeout(() => input.focus(), 100); }
+  }
+}
+
+function handleClick(e) {
+  const action = e.target.closest('[data-action]'); if (!action) return;
+  const type = action.dataset.action;
+  if (type === 'back') navigate('feed');
+  else if (type === 'review') { const r = state.reviews.find(r => r.id === action.dataset.id); if (r) navigate('review', r); }
+  else if (type === 'film') { const f = state.films.find(f => f.id === parseInt(action.dataset.id)); if (f) navigate('film', f); }
+  else if (type === 'nav') {
+    const tab = action.dataset.tab; state.tab = tab;
+    if (tab === 'feed') navigate('feed');
+    else if (tab === 'compose') navigate('compose');
+    else if (tab === 'search') toggleSearch(true);
+    updateNav();
+  } else if (type === 'toggle-media') {
+    const key = action.dataset.key;
+    state.composerMedia = state.composerMedia.includes(key) ? state.composerMedia.filter(k => k !== key) : [...state.composerMedia, key];
+    render();
+  }
+}
+
+async function init() {
+  const trending = await api.getTrending();
+  if (trending && trending.length) {
+    state.films = trending.map((t, i) => ({ ...t, id: i + 1, colors: MOCK_FILMS[i % MOCK_FILMS.length].colors }));
+  }
+  render();
+  document.addEventListener('click', handleClick);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleSearch(false); });
+}
+
+document.addEventListener('DOMContentLoaded', init);
