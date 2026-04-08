@@ -92,7 +92,7 @@ function renderDiscover(){
     const gname = GENRES.find(g=>g.id===state.discoverSelectedGenre)?.name||'';
     genreFilmsHTML = `<h3 class="section-label" style="margin-bottom:16px">Popular ${gname} Films</h3><div class="discover-grid">${state.discoverGenreFilms.map(m=>`<div class="discover-film" data-action="discover-film" data-tmdb="${m.id}"><div class="poster poster--md poster--clickable">${m.poster_path?`<img src="${IMG}/w342${m.poster_path}" alt="${m.title}">`:getPosterSvg(1,110,165)}</div><p class="discover-film__title">${m.title}</p><p class="discover-film__year">${m.release_date?m.release_date.slice(0,4):''}</p></div>`).join('')}</div>`;
   }
-  return `<div class="view animate-fade" style="max-width:var(--content-width);margin:0 auto"><h2 style="font:400 28px var(--font-display);color:var(--text-primary);margin:0 0 24px">Discover</h2>${searchHTML}${resultsHTML||genreTags+genreFilmsHTML}</div>`;
+  return `<div class="view animate-fade" style="max-width:var(--content-width);margin:0 auto"><h2 style="font:400 28px var(--font-display);color:var(--text-primary);margin:0 0 24px">Discover</h2>${searchHTML}<div id="discover-results-area">${resultsHTML||genreTags+genreFilmsHTML}</div></div>`;
 }
 // ── PROFILE VIEW ──
 function renderProfile(){
@@ -121,11 +121,11 @@ function renderCompose(){
   // Film search section
   const filmPicker = state.composerFilm
     ? `<div class="compose__field" style="cursor:pointer" data-action="clear-composer-film"><div class="poster poster--sm">${state.composerFilm.poster_path?`<img src="${IMG}/w92${state.composerFilm.poster_path}" alt="" style="width:40px;height:60px;object-fit:cover">`:''}</div><div><span class="compose__field-label">Film</span><div style="font:400 15px var(--font-display);color:var(--text-primary);margin-top:2px">${state.composerFilm.title} <span style="color:var(--text-muted);font-size:12px">(${state.composerFilm.release_date?state.composerFilm.release_date.slice(0,4):''})</span></div></div><span style="margin-left:auto;font:400 11px var(--font-sans);color:var(--text-muted)">✕ change</span></div>`
-    : `<div style="margin-bottom:20px"><div class="compose__field" style="padding:8px 16px"><div class="compose__field-poster" style="width:28px;height:42px;font-size:14px">🎬</div><div style="flex:1"><input type="search" id="composer-film-search" class="search-input" placeholder="Search for a film…" value="${state.composerSearch}" style="max-width:100%;margin:0;padding:10px 0;border:none;background:transparent;font-size:14px" autocomplete="off"></div></div>${state.composerResults.length?`<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:0 0 12px 12px;margin-top:-4px;max-height:240px;overflow-y:auto">${state.composerResults.slice(0,8).map(m=>`<div class="composer-result" data-action="pick-film" data-film='${JSON.stringify(m).replace(/'/g,"&#39;")}'><div style="width:32px;height:48px;border-radius:4px;overflow:hidden;flex-shrink:0;background:#222">${m.poster_path?`<img src="${IMG}/w92${m.poster_path}" style="width:100%;height:100%;object-fit:cover">`:''}</div><div><div style="font:400 14px var(--font-display);color:var(--text-primary)">${m.title}</div><div style="font:400 11px var(--font-sans);color:var(--text-muted)">${m.release_date?m.release_date.slice(0,4):''}</div></div></div>`).join('')}</div>`:''}${state.composerSearching?`<p style="font:400 11px var(--font-sans);color:var(--text-muted);padding:8px 0">Searching…</p>`:''}</div>`;
+    : `<div style="margin-bottom:20px"><div class="compose__field" style="padding:8px 16px"><div class="compose__field-poster" style="width:28px;height:42px;font-size:14px">🎬</div><div style="flex:1"><input type="search" id="composer-film-search" class="search-input" placeholder="Search for a film…" value="${state.composerSearch}" style="max-width:100%;margin:0;padding:10px 0;border:none;background:transparent;font-size:14px" autocomplete="off"></div></div><div id="composer-results-drop" style="background:var(--bg-card);border:1px solid var(--border);border-radius:0 0 12px 12px;margin-top:-4px;max-height:240px;overflow-y:auto;display:${state.composerResults.length||state.composerSearching?'block':'none'}">${state.composerSearching?'<p style="font:400 11px var(--font-sans);color:var(--text-muted);padding:10px 16px">Searching…</p>':state.composerResults.slice(0,8).map(m=>`<div class="composer-result" data-action="pick-film" data-film='${JSON.stringify(m).replace(/'/g,"&#39;")}'><div style="width:32px;height:48px;border-radius:4px;overflow:hidden;flex-shrink:0;background:#222">${m.poster_path?`<img src="${IMG}/w92${m.poster_path}" style="width:100%;height:100%;object-fit:cover">`:''}</div><div><div style="font:400 14px var(--font-display);color:var(--text-primary)">${m.title}</div><div style="font:400 11px var(--font-sans);color:var(--text-muted)">${m.release_date?m.release_date.slice(0,4):''}</div></div></div>`).join('')}</div></div>`;
   // Star rating
   const starPicker = `<div style="margin-bottom:24px"><span class="compose__field-label">Rating</span><div style="margin-top:8px;display:flex;gap:4px">${[1,2,3,4,5].map(n=>`<button class="star-btn ${state.composerRating>=n?'star-btn--active':''}" data-action="set-rating" data-rating="${n}" style="font-size:28px;background:none;border:none;cursor:pointer;color:${state.composerRating>=n?'var(--gold)':'var(--text-dim)'};transition:color 0.15s;padding:2px 4px">★</button>`).join('')}</div></div>`;
   // Tweet URL input
-  const tweetInput = state.composerMedia.includes('tweet') ? `<div style="margin-bottom:16px"><span class="compose__field-label" style="display:block;margin-bottom:8px">Embed a Tweet / X Post</span><input type="text" id="tweet-url-input" class="search-input" placeholder="Paste tweet URL…" value="${state.composerTweetUrl||''}" style="max-width:100%;margin:0;font-size:13px;padding:12px 14px">${state.composerTweetUrl&&getTweetId(state.composerTweetUrl)?`<div style="margin-top:8px;padding:8px 12px;border-radius:8px;background:rgba(232,184,75,0.05);border:1px solid rgba(232,184,75,0.2);font:400 11px var(--font-sans);color:var(--text-secondary)">✓ Tweet detected</div>`:''}</div>` : '';
+  const tweetInput = `<div id="tweet-section" style="margin-bottom:16px;display:${state.composerMedia.includes('tweet')?'block':'none'}"><span class="compose__field-label" style="display:block;margin-bottom:8px">Embed a Tweet / X Post</span><input type="text" id="tweet-url-input" class="search-input" placeholder="Paste tweet URL…" value="${state.composerTweetUrl||''}" style="max-width:100%;margin:0;font-size:13px;padding:12px 14px">${state.composerTweetUrl&&getTweetId(state.composerTweetUrl)?`<div style="margin-top:8px;padding:8px 12px;border-radius:8px;background:rgba(232,184,75,0.05);border:1px solid rgba(232,184,75,0.2);font:400 11px var(--font-sans);color:var(--text-secondary)">✓ Tweet detected</div>`:''}</div>` : '';
   // Media grid
   const mediaGrid = `<span class="compose__field-label" style="display:block;margin-bottom:12px">Add to your montage</span><div class="media-grid">${o.map(m=>`<div class="media-option ${state.composerMedia.includes(m.k)?'media-option--active':''}" data-action="toggle-media" data-key="${m.k}"><span class="media-option__icon">${m.i}</span><span class="media-option__label">${m.l}</span></div>`).join('')}</div>`;
   // Block slots for non-tweet media
@@ -145,9 +145,9 @@ function render(){
   window.scrollTo(0,0);
   if(state.view==='review')setTimeout(loadTweetEmbeds,100);
   bindInputs();
-}
 function nav(v,d=null){state.view=v;state.data=d;render();}
 function setTab(t){state.tab=t;if(t==='feed')nav('feed');else if(t==='compose')nav('compose');else if(t==='search'){nav('discover');state.tab='search';}else if(t==='profile')nav('profile');}
+
 // ── TMDB SEARCH ──
 let searchTimer=null;
 async function tmdbSearch(query){
@@ -160,15 +160,53 @@ async function tmdbGenre(genreId){
 async function tmdbMovie(id){
   try{const r=await fetch(`${TMDB}/movie/${id}?api_key=${TMDB_KEY}&append_to_response=credits`);const m=await r.json();return{id:m.id,tmdbId:m.id,imdbId:m.imdb_id,title:m.title,year:m.release_date?new Date(m.release_date).getFullYear():null,director:m.credits?.crew?.find(c=>c.job==='Director')?.name||null,poster:`${IMG}/w342${m.poster_path}`,backdrop:m.backdrop_path?`${IMG}/w780${m.backdrop_path}`:null,rating:m.vote_average,genres:m.genres?.map(g=>g.name)||[],tagline:m.tagline,overview:m.overview,colors:['#1a1a1a','#2a2a2a','#4a4a4a','#6a6a6a','#8a8a8a']};}catch(e){return null;}
 }
-// ── INPUT BINDINGS ──
+
+// ── TARGETED DOM UPDATES (no full re-render) ──
+function renderSearchDropdown(results, type) {
+  if (!results.length) return '';
+  return results.slice(0,8).map(m => `<div class="composer-result" data-action="${type}" data-${type==='pick-film'?'film':'tmdb'}='${type==='pick-film'?JSON.stringify(m).replace(/'/g,"&#39;"):m.id}'>
+    <div style="width:32px;height:48px;border-radius:4px;overflow:hidden;flex-shrink:0;background:#222">${m.poster_path?`<img src="${IMG}/w92${m.poster_path}" style="width:100%;height:100%;object-fit:cover">`:''}</div>
+    <div><div style="font:400 14px var(--font-display);color:var(--text-primary)">${m.title}</div><div style="font:400 11px var(--font-sans);color:var(--text-muted)">${m.release_date?m.release_date.slice(0,4):''}</div></div></div>`).join('');
+}
+
+function patchComposerResults() {
+  let drop = $('#composer-results-drop');
+  if (!drop) return;
+  if (state.composerSearching) { drop.innerHTML = '<p style="font:400 11px var(--font-sans);color:var(--text-muted);padding:10px 16px">Searching…</p>'; drop.style.display = 'block'; }
+  else if (state.composerResults.length) { drop.innerHTML = renderSearchDropdown(state.composerResults, 'pick-film'); drop.style.display = 'block'; }
+  else { drop.innerHTML = ''; drop.style.display = 'none'; }
+}
+
+function patchDiscoverResults() {
+  let area = $('#discover-results-area');
+  if (!area) return;
+  if (state.discoverSearching) {
+    area.innerHTML = '<div style="text-align:center;padding:40px 0"><p style="font:400 13px var(--font-sans);color:var(--text-muted)">Searching…</p></div>';
+  } else if (state.discoverQuery && state.discoverResults.length) {
+    area.innerHTML = `<h3 class="section-label" style="margin-bottom:16px">Results for "${state.discoverQuery}"</h3><div class="discover-grid">${state.discoverResults.map(m=>`<div class="discover-film" data-action="discover-film" data-tmdb="${m.id}"><div class="poster poster--md poster--clickable">${m.poster_path?`<img src="${IMG}/w342${m.poster_path}" alt="${m.title}">`:getPosterSvg(1,110,165)}</div><p class="discover-film__title">${m.title}</p><p class="discover-film__year">${m.release_date?m.release_date.slice(0,4):''}</p></div>`).join('')}</div>`;
+  } else if (state.discoverQuery) {
+    area.innerHTML = `<div style="text-align:center;padding:40px 0"><p style="font:400 14px var(--font-sans);color:var(--text-muted)">No films found for "${state.discoverQuery}"</p></div>`;
+  } else { area.innerHTML = ''; }
+}
+
+// ── INPUT BINDINGS (targeted patches, no full re-render) ──
 function bindInputs(){
   const ds=$('#discover-search');
-  if(ds){ds.focus();ds.addEventListener('input',e=>{state.discoverQuery=e.target.value;clearTimeout(searchTimer);if(e.target.value.length>=2){state.discoverSearching=true;render();const inp=$('#discover-search');inp?.focus();inp?.setSelectionRange(inp.value.length,inp.value.length);searchTimer=setTimeout(async()=>{state.discoverResults=await tmdbSearch(e.target.value);state.discoverSearching=false;render();const inp2=$('#discover-search');inp2?.focus();inp2?.setSelectionRange(inp2.value.length,inp2.value.length);},400);}else{state.discoverResults=[];state.discoverSearching=false;render();const inp=$('#discover-search');inp?.focus();}});}
+  if(ds){ ds.addEventListener('input',e=>{ state.discoverQuery=e.target.value; clearTimeout(searchTimer);
+    if(e.target.value.length>=2){ state.discoverSearching=true; patchDiscoverResults();
+      searchTimer=setTimeout(async()=>{ state.discoverResults=await tmdbSearch(e.target.value); state.discoverSearching=false; patchDiscoverResults(); },400);
+    } else { state.discoverResults=[]; state.discoverSearching=false; patchDiscoverResults(); }
+  });}
   const cs=$('#composer-film-search');
-  if(cs){cs.focus();cs.addEventListener('input',e=>{state.composerSearch=e.target.value;clearTimeout(searchTimer);if(e.target.value.length>=2){state.composerSearching=true;render();const inp=$('#composer-film-search');inp?.focus();inp?.setSelectionRange(inp.value.length,inp.value.length);searchTimer=setTimeout(async()=>{state.composerResults=await tmdbSearch(e.target.value);state.composerSearching=false;render();const inp2=$('#composer-film-search');inp2?.focus();inp2?.setSelectionRange(inp2.value.length,inp2.value.length);},400);}else{state.composerResults=[];render();const inp=$('#composer-film-search');inp?.focus();}});}
+  if(cs){ cs.addEventListener('input',e=>{ state.composerSearch=e.target.value; clearTimeout(searchTimer);
+    if(e.target.value.length>=2){ state.composerSearching=true; patchComposerResults();
+      searchTimer=setTimeout(async()=>{ state.composerResults=await tmdbSearch(e.target.value); state.composerSearching=false; patchComposerResults(); },400);
+    } else { state.composerResults=[]; patchComposerResults(); }
+  });}
   const ti=$('#tweet-url-input');
-  if(ti){ti.addEventListener('input',e=>{state.composerTweetUrl=e.target.value;});ti.addEventListener('change',e=>{state.composerTweetUrl=e.target.value;render();const inp=$('#tweet-url-input');inp?.focus();});}
+  if(ti){ ti.addEventListener('input',e=>{ state.composerTweetUrl=e.target.value; }); }
 }
+
 // ── EVENT HANDLERS ──
 document.addEventListener('click',async e=>{
   const a=e.target.closest('[data-action]');if(!a)return;const t=a.dataset.action;
@@ -176,14 +214,37 @@ document.addEventListener('click',async e=>{
   else if(t==='review'){const r=state.reviews.find(x=>x.id===a.dataset.id);if(r)nav('review',r);}
   else if(t==='film'){const f=state.films.find(x=>x.id===parseInt(a.dataset.id));if(f)nav('film',f);}
   else if(t==='nav')setTab(a.dataset.tab);
-  else if(t==='toggle-media'){const k=a.dataset.key;state.composerMedia=state.composerMedia.includes(k)?state.composerMedia.filter(x=>x!==k):[...state.composerMedia,k];if(k==='tweet'&&!state.composerMedia.includes('tweet'))state.composerTweetUrl='';render();}
-  else if(t==='set-rating'){state.composerRating=parseInt(a.dataset.rating);render();}
+  // ── MEDIA TOGGLE: direct DOM patch, no re-render ──
+  else if(t==='toggle-media'){
+    const k=a.dataset.key;
+    state.composerMedia=state.composerMedia.includes(k)?state.composerMedia.filter(x=>x!==k):[...state.composerMedia,k];
+    // Toggle active class directly
+    const opt=a.closest('.media-option');
+    if(opt) opt.classList.toggle('media-option--active');
+    // Show/hide tweet input
+    if(k==='tweet'){
+      if(!state.composerMedia.includes('tweet'))state.composerTweetUrl='';
+      const tweetSection=$('#tweet-section');
+      if(tweetSection) tweetSection.style.display=state.composerMedia.includes('tweet')?'block':'none';
+      else if(state.composerMedia.includes('tweet')){ render(); } // first time showing tweet, need render
+    }
+  }
+  // ── STAR RATING: direct DOM patch, no re-render ──
+  else if(t==='set-rating'){
+    state.composerRating=parseInt(a.dataset.rating);
+    $$('.star-btn').forEach(b=>{
+      const r=parseInt(b.dataset.rating);
+      b.style.color=state.composerRating>=r?'var(--gold)':'var(--text-dim)';
+      b.classList.toggle('star-btn--active',state.composerRating>=r);
+    });
+  }
   else if(t==='pick-film'){try{state.composerFilm=JSON.parse(a.dataset.film);state.composerSearch='';state.composerResults=[];render();}catch(e){}}
   else if(t==='clear-composer-film'){state.composerFilm=null;state.composerSearch='';render();}
   else if(t==='genre'){const gid=parseInt(a.dataset.genre);state.discoverSelectedGenre=state.discoverSelectedGenre===gid?null:gid;state.discoverQuery='';state.discoverResults=[];if(state.discoverSelectedGenre){state.discoverGenreFilms=await tmdbGenre(gid);}else{state.discoverGenreFilms=[];}render();}
   else if(t==='discover-film'){const id=a.dataset.tmdb;if(id){const film=await tmdbMovie(parseInt(id));if(film){const existing=state.films.find(f=>f.tmdbId===film.tmdbId);if(existing){nav('film',existing);}else{film.id=1000+film.tmdbId;state.films.push(film);nav('film',film);}}}}
   else if(t==='publish'){alert('🎬 Montage published! (Backend integration coming soon)');setTab('feed');}
 });
+
 // ── INIT ──
 (async()=>{
   render();
