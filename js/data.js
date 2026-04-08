@@ -1,6 +1,6 @@
 export const MOCK_FILMS = [
   {
-    id: 1, tmdbId: 1233069, imdbId: 'tt21064584',
+    id: 1, tmdbId: 1233413, imdbId: null,
     title: 'Sinners', year: 2025, director: 'Ryan Coogler',
     rating: 9.8, genres: ['Horror', 'Drama', 'Music'],
     poster: null, backdrop: null,
@@ -8,7 +8,7 @@ export const MOCK_FILMS = [
     tagline: 'Come and get some.',
   },
   {
-    id: 2, tmdbId: 1064213, imdbId: 'tt23561236',
+    id: 2, tmdbId: 1054867, imdbId: null,
     title: 'One Battle After Another', year: 2025, director: 'Paul Thomas Anderson',
     rating: 9.6, genres: ['Drama', 'Comedy', 'Action'],
     poster: null, backdrop: null,
@@ -16,7 +16,7 @@ export const MOCK_FILMS = [
     tagline: 'How do you fight back when all seems lost?',
   },
   {
-    id: 3, tmdbId: 1064028, imdbId: 'tt28015403',
+    id: 3, tmdbId: 1317288, imdbId: null,
     title: 'Marty Supreme', year: 2025, director: 'Josh Safdie',
     rating: 8.8, genres: ['Drama', 'Comedy'],
     poster: null, backdrop: null,
@@ -24,7 +24,7 @@ export const MOCK_FILMS = [
     tagline: 'Every table has a hustle.',
   },
   {
-    id: 4, tmdbId: 1197306, imdbId: 'tt14999086',
+    id: 4, tmdbId: 1220564, imdbId: null,
     title: 'The Secret Agent', year: 2025, director: 'Kleber Mendonça Filho',
     rating: 8.4, genres: ['Thriller', 'Drama'],
     poster: null, backdrop: null,
@@ -32,7 +32,7 @@ export const MOCK_FILMS = [
     tagline: 'Every system has a crack.',
   },
   {
-    id: 5, tmdbId: 1186947, imdbId: 'tt31576498',
+    id: 5, tmdbId: 1062722, imdbId: null,
     title: 'Frankenstein', year: 2025, director: 'Guillermo del Toro',
     rating: 8.6, genres: ['Horror', 'Drama', 'Gothic'],
     poster: null, backdrop: null,
@@ -40,7 +40,7 @@ export const MOCK_FILMS = [
     tagline: 'What is it to be alive?',
   },
   {
-    id: 6, tmdbId: 1335510, imdbId: 'tt32880780',
+    id: 6, tmdbId: 1272837, imdbId: null,
     title: '28 Years Later: The Bone Temple', year: 2026, director: 'Nia DaCosta',
     rating: 8.2, genres: ['Horror', 'Action', 'Thriller'],
     poster: null, backdrop: null,
