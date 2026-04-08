@@ -8,7 +8,7 @@ const $$ = (s,c=document) => [...c.querySelectorAll(s)];
 function stars(n,cls=''){return `<span class="stars ${cls}">${'★'.repeat(Math.floor(n))}${n%1>=0.5?'½':''}</span>`;}
 function getFilm(id){return state.films.find(f=>f.id===id);}
 function posterHTML(fid,size='sm'){
-  const f=getFilm(fid),dims={sm:[34,50],md:[72,108],lg:[80,120]},[w,h]=dims[size]||dims.sm;
+  const f=getFilm(fid),dims={sm:[40,60],md:[110,165],lg:[120,180]},[w,h]=dims[size]||dims.sm;
   if(f?.poster) return `<div class="poster poster--${size}"><img src="${f.poster}" alt="${f.title}" onerror="this.style.display='none'"></div>`;
   return `<div class="poster poster--${size}">${getPosterSvg(fid,w,h)}</div>`;
 }
@@ -66,7 +66,7 @@ function rCard(r,i){
   return `<div class="review-card" style="animation-delay:${i*0.045}s" data-action="review" data-id="${r.id}"><div class="review-card__header">${posterHTML(r.filmId,'sm')}<div class="review-card__meta"><div class="review-card__user"><div class="user-avatar" style="background:linear-gradient(135deg,${r.accent},${r.accent}88)">${r.user.username[0].toUpperCase()}</div><span class="user-name">${r.user.displayName}</span></div><div class="review-card__film-info"><span class="film-title-small">${f?.title||''}</span>${stars(r.rating,'stars--sm')}</div></div></div><div class="review-card__blocks">${r.blocks.map(b=>rBlock(b,r.filmId,true)).join('')}</div><div class="review-card__footer"><span class="like-count">${r.likes} ♡</span><div class="media-badges">${ty.map(t=>`<span class="media-badge">${MI[t]||'·'}</span>`).join('')}</div></div></div>`;
 }
 function renderFeed(){
-  const tr=state.films.map(f=>`<div class="poster poster--md poster--clickable" data-action="film" data-id="${f.id}">${f.poster?`<img src="${f.poster}" alt="${f.title}">`:getPosterSvg(f.id,72,108)}</div>`).join('');
+  const tr=state.films.map(f=>`<div class="poster poster--md poster--clickable" data-action="film" data-id="${f.id}">${f.poster?`<img src="${f.poster}" alt="${f.title}">`:getPosterSvg(f.id,110,165)}</div>`).join('');
   return `<div class="feed"><div class="trending"><h3 class="section-label">Trending</h3><div class="trending__scroll">${tr}</div></div><h3 class="section-label">Feed</h3><div class="masonry">${state.reviews.map((r,i)=>rCard(r,i)).join('')}</div></div>`;
 }
 function renderReview(rv){
@@ -118,8 +118,23 @@ document.addEventListener('click',e=>{
   else if(t==='nav'){state.tab=a.dataset.tab;if(a.dataset.tab==='feed')nav('feed');else if(a.dataset.tab==='compose')nav('compose');}
   else if(t==='toggle-media'){const k=a.dataset.key;state.composerMedia=state.composerMedia.includes(k)?state.composerMedia.filter(x=>x!==k):[...state.composerMedia,k];if(k==='tweet'&&!state.composerMedia.includes('tweet'))state.composerTweetUrl='';render();}
 });
+// Fetch real posters for our specific films from TMDB
 (async()=>{
-  const t=await api.getTrending();
-  if(t&&t.length)state.films=t.map((x,i)=>({...x,id:i+1,colors:MOCK_FILMS[i%MOCK_FILMS.length].colors}));
-  render();
+  render(); // render immediately with SVG fallbacks
+  try {
+    const fetches = MOCK_FILMS.map(async (film) => {
+      if (!film.tmdbId) return film;
+      try {
+        const res = await fetch(`https://api.themoviedb.org/3/movie/${film.tmdbId}?api_key=6c2c758841a46971ae09531415f2f16c`);
+        const m = await res.json();
+        if (m.poster_path) film.poster = `https://image.tmdb.org/t/p/w342${m.poster_path}`;
+        if (m.backdrop_path) film.backdrop = `https://image.tmdb.org/t/p/w780${m.backdrop_path}`;
+        if (m.tagline) film.tagline = m.tagline;
+      } catch(e) { /* keep SVG fallback */ }
+      return film;
+    });
+    await Promise.all(fetches);
+    state.films = [...MOCK_FILMS]; // trigger re-render with poster URLs
+    render();
+  } catch(e) { console.warn('TMDB fetch failed, using SVG posters'); }
 })();
