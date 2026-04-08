@@ -95,8 +95,14 @@ function renderCompose(){
     ${state.composerMedia.filter(k=>k!=='tweet').length?`<span class="compose__field-label" style="display:block;margin-bottom:12px">Your blocks</span>${state.composerMedia.filter(k=>k!=='tweet').map(k=>{const m=o.find(x=>x.k===k);return `<div class="compose__block-slot"><span class="compose__block-slot__icon">${m.i}</span><span class="compose__block-slot__label">Tap to add ${m.l.toLowerCase()}</span></div>`;}).join('')}`:''}<div class="compose__textarea"><span class="compose__field-label">Your thoughts</span><div class="compose__field-placeholder" style="margin-top:10px">Write…</div></div>
     <button class="btn-publish">Publish</button></div>`;
 }
+
+// Error state for when TMDB fails
+function renderError() {
+  return '<div style="text-align:center;padding:60px 20px"><p style="font:400 14px var(--font-sans);color:var(--text-muted)">Couldn\'t load film data. Showing cached content.</p></div>';
+}
 function render(){
   const c=$('#content');
+  c.classList.add('loaded');
   if(state.view==='feed')c.innerHTML=renderFeed();
   else if(state.view==='review')c.innerHTML=renderReview(state.data);
   else if(state.view==='film')c.innerHTML=renderFilm(state.data);

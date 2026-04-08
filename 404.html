@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MONTAGE — Page Not Found</title>
+  <style>
+    body { background: #1a1612; color: #e8e0d4; font-family: 'Georgia', serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; text-align: center; }
+    .wrap { max-width: 400px; padding: 40px 20px; }
+    h1 { color: #e8b84b; font-size: 48px; margin: 0 0 8px; letter-spacing: 4px; }
+    p { color: #5a5449; font-size: 14px; line-height: 1.6; margin: 16px 0; }
+    a { color: #e8b84b; text-decoration: none; font-size: 14px; }
+    a:hover { text-decoration: underline; }
+  </style>
+  <!-- GitHub Pages SPA redirect -->
+  <script>
+    // If this is a path like /montage/review/123, redirect to index with the path as a query param
+    // so the SPA router can handle it
+    var path = window.location.pathname;
+    if (path !== '/montage/' && path !== '/montage/index.html') {
+      window.location.replace('/montage/' + '?route=' + encodeURIComponent(path));
+    }
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <h1>404</h1>
+    <p>This scene didn't make the final cut.</p>
+    <a href="/montage/">← Back to Montage</a>
+  </div>
+</body>
+</html>

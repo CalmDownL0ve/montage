@@ -4,46 +4,98 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#1a1612">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="description" content="Montage — review films with photos, tweets, drawings, and more.">
-  <title>MONTAGE</title>
+  <meta name="apple-mobile-web-app-title" content="Montage">
+
+  <!-- SEO -->
+  <title>MONTAGE — Review films with photos, tweets, drawings & more</title>
+  <meta name="description" content="A new way to review movies. Build rich, visual montages with photos, tweets, sketches, color palettes and more. Like Letterboxd meets Pinterest.">
+  <meta name="keywords" content="movie reviews, film criticism, letterboxd alternative, visual reviews, montage, cinema">
+  <link rel="canonical" href="https://calmdownl0ve.github.io/montage/">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://calmdownl0ve.github.io/montage/">
+  <meta property="og:title" content="MONTAGE — Review films with photos, tweets, drawings & more">
+  <meta property="og:description" content="A new way to review movies. Build rich, visual montages with photos, tweets, sketches, color palettes and more.">
+  <meta property="og:image" content="https://calmdownl0ve.github.io/montage/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MONTAGE — Review films with photos, tweets, drawings & more">
+  <meta name="twitter:description" content="A new way to review movies. Build rich, visual montages with photos, tweets, sketches, color palettes and more.">
+  <meta name="twitter:image" content="https://calmdownl0ve.github.io/montage/og-image.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,300;0,400;1,300&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=5">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css?v=6">
 </head>
 <body>
-  <div class="grain"></div>
+  <!-- Skip to content for screen readers -->
+  <a href="#content" class="sr-only sr-only--focusable">Skip to content</a>
+
+  <div class="grain" aria-hidden="true"></div>
   <div id="app">
-    <header class="topbar">
+    <header class="topbar" role="banner">
       <h1 class="topbar__logo">Montage</h1>
-      <div class="topbar__avatar">S</div>
+      <button class="topbar__avatar" aria-label="Profile">S</button>
     </header>
-    <main id="content"></main>
-    <div class="search-overlay">
-      <input class="search-input" type="text" placeholder="Search films…" autocomplete="off">
-      <div class="search-results"></div>
+
+    <!-- Loading skeleton shown before JS loads -->
+    <main id="content" role="main">
+      <div class="loading-skeleton" aria-label="Loading content">
+        <div class="skeleton-trending">
+          <div class="skeleton-label"></div>
+          <div class="skeleton-row"><div class="skeleton-poster"></div><div class="skeleton-poster"></div><div class="skeleton-poster"></div><div class="skeleton-poster"></div><div class="skeleton-poster"></div></div>
+        </div>
+        <div class="skeleton-label" style="margin-top:24px"></div>
+        <div class="skeleton-masonry"><div class="skeleton-card"></div><div class="skeleton-card skeleton-card--short"></div><div class="skeleton-card skeleton-card--tall"></div><div class="skeleton-card"></div><div class="skeleton-card skeleton-card--short"></div></div>
+      </div>
+    </main>
+
+    <div class="search-overlay" role="dialog" aria-modal="true" aria-label="Search films">
+      <input class="search-input" type="search" placeholder="Search films…" autocomplete="off" aria-label="Search films">
+      <div class="search-results" role="listbox"></div>
     </div>
-    <nav class="bottomnav">
-      <button class="nav-btn nav-btn--active" data-action="nav" data-tab="feed">
-        <span class="nav-btn__icon">⬡</span>
+    <nav class="bottomnav" role="navigation" aria-label="Main navigation">
+      <button class="nav-btn nav-btn--active" data-action="nav" data-tab="feed" aria-label="Feed" aria-current="page">
+        <span class="nav-btn__icon" aria-hidden="true">⬡</span>
         <span class="nav-btn__label">Feed</span>
       </button>
-      <button class="nav-btn" data-action="nav" data-tab="search">
-        <span class="nav-btn__icon">◎</span>
+      <button class="nav-btn" data-action="nav" data-tab="search" aria-label="Discover">
+        <span class="nav-btn__icon" aria-hidden="true">◎</span>
         <span class="nav-btn__label">Discover</span>
       </button>
-      <button class="nav-btn" data-action="nav" data-tab="compose">
-        <span class="nav-btn__icon nav-btn__icon--create">✦</span>
+      <button class="nav-btn" data-action="nav" data-tab="compose" aria-label="Create review">
+        <span class="nav-btn__icon nav-btn__icon--create" aria-hidden="true">✦</span>
         <span class="nav-btn__label">Create</span>
       </button>
-      <button class="nav-btn" data-action="nav" data-tab="profile">
-        <span class="nav-btn__icon">◐</span>
+      <button class="nav-btn" data-action="nav" data-tab="profile" aria-label="Your profile">
+        <span class="nav-btn__icon" aria-hidden="true">◐</span>
         <span class="nav-btn__label">You</span>
       </button>
     </nav>
   </div>
+
+  <!-- TMDB Attribution (required by API Terms of Use) -->
+  <footer class="tmdb-attribution" role="contentinfo">
+    <p>Film data provided by <a href="https://www.themoviedb.org" target="_blank" rel="noopener">TMDB</a>. This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+  </footer>
+
   <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-  <script type="module" src="js/app.js?v=5"></script>
+  <script type="module" src="js/app.js?v=6"></script>
 </body>
 </html>
