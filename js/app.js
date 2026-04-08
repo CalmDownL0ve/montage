@@ -1,6 +1,6 @@
-import { MOCK_FILMS, MOCK_REVIEWS } from './data.js?v=3';
-import { api } from './api.js?v=3';
-import { getPosterSvg } from './posters.js?v=3';
+import { MOCK_FILMS, MOCK_REVIEWS } from './data.js?v=4';
+import { api } from './api.js?v=4';
+import { getPosterSvg } from './posters.js?v=4';
 
 const state = { view:'feed', data:null, tab:'feed', films:MOCK_FILMS, reviews:MOCK_REVIEWS, composerMedia:[], composerTweetUrl:'' };
 const $ = (s,c=document) => c.querySelector(s);
