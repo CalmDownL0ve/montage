@@ -129,6 +129,7 @@ document.addEventListener('click',e=>{
         const m = await res.json();
         if (m.poster_path) film.poster = `https://image.tmdb.org/t/p/w342${m.poster_path}`;
         if (m.backdrop_path) film.backdrop = `https://image.tmdb.org/t/p/w780${m.backdrop_path}`;
+        if (m.imdb_id) film.imdbId = m.imdb_id;
         if (m.tagline) film.tagline = m.tagline;
       } catch(e) { /* keep SVG fallback */ }
       return film;
