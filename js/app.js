@@ -104,8 +104,16 @@ function renderCompose(){
   }
   const starPick=[1,2,3,4,5].map(n=>`<button class="star-btn" data-action="rate" data-n="${n}" style="font-size:28px;background:none;border:none;cursor:pointer;color:${state.cRating>=n?'var(--gold)':'var(--text-dim)'};padding:2px 4px">★</button>`).join('');
   const media=opts.map(m=>`<div class="media-option${state.cMedia.includes(m.k)?' media-option--active':''}" data-action="media" data-k="${m.k}"><span class="media-option__icon">${m.i}</span><span class="media-option__label">${m.l}</span></div>`).join('');
-  const tweetBox=`<div id="tweet-box" style="margin-bottom:16px;display:${state.cMedia.includes('tweet')?'block':'none'}"><span class="compose__field-label" style="display:block;margin-bottom:8px">Embed a Tweet / X Post</span><input type="text" id="c-tweet" class="search-input" placeholder="Paste tweet URL…" value="${state.cTweet||''}" style="max-width:100%;margin:0;font-size:13px;padding:12px 14px"></div>`;
-  return `<div class="compose animate-fade"><h2 class="compose__title">New Montage</h2>${filmPick}<div style="margin-bottom:24px"><span class="compose__field-label">Rating</span><div style="margin-top:8px;display:flex;gap:4px">${starPick}</div></div><span class="compose__field-label" style="display:block;margin-bottom:12px">Add to your montage</span><div class="media-grid">${media}</div>${tweetBox}<div class="compose__textarea"><span class="compose__field-label">Your thoughts</span><div style="margin-top:10px;min-height:60px;color:var(--text-dim)" contenteditable="true"></div></div><button class="btn-publish" data-action="publish">Publish</button></div>`;
+  const mediaInputs=`
+    <div id="media-inputs" style="margin-bottom:16px">
+      <div id="box-photo" style="display:${state.cMedia.includes('photo')?'block':'none'};margin-bottom:12px"><span class="compose__field-label" style="display:block;margin-bottom:8px">Photo URL</span><input type="text" id="c-photo" class="search-input" placeholder="Paste image URL…" style="max-width:100%;margin:0;font-size:13px;padding:12px 14px"></div>
+      <div id="box-tweet" style="display:${state.cMedia.includes('tweet')?'block':'none'};margin-bottom:12px"><span class="compose__field-label" style="display:block;margin-bottom:8px">Embed a Tweet / X Post</span><input type="text" id="c-tweet" class="search-input" placeholder="Paste tweet URL…" value="${state.cTweet||''}" style="max-width:100%;margin:0;font-size:13px;padding:12px 14px"></div>
+      <div id="box-sketch" style="display:${state.cMedia.includes('sketch')?'block':'none'};margin-bottom:12px"><span class="compose__field-label" style="display:block;margin-bottom:8px">Drawing Label</span><input type="text" id="c-sketch" class="search-input" placeholder="Label for your sketch…" style="max-width:100%;margin:0;font-size:13px;padding:12px 14px"></div>
+      <div id="box-quote" style="display:${state.cMedia.includes('quote')?'block':'none'};margin-bottom:12px"><span class="compose__field-label" style="display:block;margin-bottom:8px">Quote</span><input type="text" id="c-quote-text" class="search-input" placeholder="Enter quote text…" style="max-width:100%;margin:0;font-size:13px;padding:12px 14px;margin-bottom:8px"><input type="text" id="c-quote-author" class="search-input" placeholder="Author / source" style="max-width:100%;margin:0;font-size:13px;padding:12px 14px"></div>
+      <div id="box-song" style="display:${state.cMedia.includes('song')?'block':'none'};margin-bottom:12px"><span class="compose__field-label" style="display:block;margin-bottom:8px">Song Link</span><input type="text" id="c-song" class="search-input" placeholder="Paste Spotify or Apple Music URL…" style="max-width:100%;margin:0;font-size:13px;padding:12px 14px"></div>
+      <div id="box-palette" style="display:${state.cMedia.includes('palette')?'block':'none'};margin-bottom:12px"><span class="compose__field-label" style="display:block;margin-bottom:8px">Color Palette</span><input type="text" id="c-palette" class="search-input" placeholder="Hex colors, comma separated (e.g. #1a0808, #8b1a1a, #d4a070)" style="max-width:100%;margin:0;font-size:13px;padding:12px 14px"></div>
+    </div>`;
+  return `<div class="compose animate-fade"><h2 class="compose__title">New Montage</h2>${filmPick}<div style="margin-bottom:24px"><span class="compose__field-label">Rating</span><div style="margin-top:8px;display:flex;gap:4px">${starPick}</div></div><span class="compose__field-label" style="display:block;margin-bottom:12px">Add to your montage</span><div class="media-grid">${media}</div>${mediaInputs}<div class="compose__textarea"><span class="compose__field-label">Your thoughts</span><div style="margin-top:10px;min-height:60px;color:var(--text-dim)" contenteditable="true"></div></div><button class="btn-publish" data-action="publish">Publish</button></div>`;
 }
 // ── RENDER ──
 function render(){
@@ -181,7 +189,7 @@ document.addEventListener('click',async e=>{
     const k=a.dataset.k,el=a.closest('.media-option');
     state.cMedia=state.cMedia.includes(k)?state.cMedia.filter(x=>x!==k):[...state.cMedia,k];
     if(el)el.classList.toggle('media-option--active');
-    const tb=$('#tweet-box');if(tb)tb.style.display=state.cMedia.includes('tweet')?'block':'none';
+    ['photo','tweet','sketch','quote','song','palette'].forEach(m=>{const b=$('#box-'+m);if(b)b.style.display=state.cMedia.includes(m)?'block':'none';});
   }
   // Star rating — NO re-render, just update colors
   else if(t==='rate'){
