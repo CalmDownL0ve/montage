@@ -58,7 +58,7 @@ function renderReview(rv){
 function renderFilm(fl){
   const c0=(fl.colors||['#1a1612'])[0];
   const rvs=state.reviews.filter(r=>r.filmId===fl.id);
-  const list=(rvs.length?rvs:state.reviews.slice(0,4)).map((r,i)=>rCard(r,i)).join('');
+  const list=rvs.length?rvs.map((r,i)=>rCard(r,i)).join(''):`<p style="font:400 14px var(--font-sans);color:var(--text-muted);text-align:center;padding:40px 0">No montages yet — be the first.</p>`;
   return `<div class="view animate-fade"><button class="back-btn" data-action="back">← back</button><div class="film-hero"><div class="film-hero__bg">${fl.backdrop?`<img src="${fl.backdrop}" alt="">`:''}<div class="film-hero__gradient" style="background:linear-gradient(180deg,transparent 30%,${c0}cc 70%,#1a1612)"></div></div><div class="film-hero__content">${posterHTML(fl.id,'lg')}<div class="film-hero__info"><h1 class="film-hero__title">${fl.title}</h1><p class="film-hero__meta">${fl.year||''} · ${fl.director||''}</p>${stars((fl.rating||0)/2,'stars--lg')}${fl.imdbId?`<a href="https://www.imdb.com/title/${fl.imdbId}" target="_blank" rel="noopener" style="font:400 11px var(--font-sans);color:var(--gold);margin-top:8px;display:inline-block;opacity:0.6">IMDb ↗</a>`:''}</div></div></div><div style="margin-top:24px"><h3 class="section-label">Montages</h3><div class="masonry">${list}</div></div></div>`;
 }
 const GENRES=[{id:28,n:'Action'},{id:35,n:'Comedy'},{id:80,n:'Crime'},{id:99,n:'Documentary'},{id:18,n:'Drama'},{id:14,n:'Fantasy'},{id:27,n:'Horror'},{id:10402,n:'Music'},{id:9648,n:'Mystery'},{id:10749,n:'Romance'},{id:878,n:'Sci-Fi'},{id:53,n:'Thriller'}];
